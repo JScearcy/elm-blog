@@ -1,0 +1,11 @@
+{
+  "name": "elm-blog",
+  "version": "1.0.0",
+  "description": "A simple blog site using elm and .net core",
+  "main": "index.js",
+  "scripts": {
+    "build": "elm-make Main.elm --output ../server/wwwroot/js/site.js"
+  },
+  "author": "Jacob Scearcy",
+  "license": "ISC"
+}
