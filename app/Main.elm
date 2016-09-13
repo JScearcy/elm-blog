@@ -62,7 +62,7 @@ view model =
 
 blogViewHelper : Blog -> Html Msg
 blogViewHelper blog =
-    a [ href blog.url, class "col-md-3 col-sm-2 blog-container", style [("background-image", "url('https://i.imgur.com/aha9awt.png')") ] ] 
+    a [ href blog.url, class "col-md-3 col-sm-2 blog-container", style [("background-image", blog.img) ] ] 
         [ div [  ] 
             [ p [] [ text blog.title ] ]
         ]
