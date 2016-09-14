@@ -7,5 +7,8 @@
     "build": "elm-make app/Main.elm --output server/wwwroot/js/site.js"
   },
   "author": "Jacob Scearcy",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "highlight.js": "^9.6.0"
+  }
 }
