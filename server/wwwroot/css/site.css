@@ -29,13 +29,25 @@ textarea {
     padding-left: 0.5em;
 }
 
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display: inline-block;
+    float: none;
+    text-align: left;
+    margin-right: -4px;
+}
+
 .blog-container {
-    height: 5em;
+    height: 15em;
+    background-size: cover;
     border: 1px solid #000;
     border-radius: 3px;
     margin: 5px;
     text-align: center;
     text-decoration: none;
+    padding: 0;
 }
 
 .blog-container:hover {
@@ -44,4 +56,17 @@ textarea {
 
 .blog-container div {
     color: #000;
+}
+
+.blog-header {
+    font-size: 2em;
+    background-color: #FFF;
+    width: 100%;
+}
+
+.post-input {
+    margin: 0 auto;
+    margin-top: 2em;
+    max-width: 100%;
+    width: 60em;
 }

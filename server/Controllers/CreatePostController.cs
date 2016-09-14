@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication.Controllers
 {
-    public class HomeController : Controller
+    public class CreatePostController : Controller
     {
         public IActionResult Index()
         {

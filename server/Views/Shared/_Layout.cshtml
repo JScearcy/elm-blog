@@ -6,7 +6,7 @@
     <title>@ViewData["Title"] -</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment names="Staging,Production">
@@ -49,9 +49,6 @@
     <environment names="Staging,Production">
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
-    <script>
-        Elm.Main.embed(document.getElementById('elmApp'));
-    </script>
 
     @RenderSection("scripts", required: false)
 </body>
