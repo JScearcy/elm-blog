@@ -4,7 +4,9 @@
   "description": "A simple blog site using elm and .net core",
   "main": "index.js",
   "scripts": {
-    "build": "elm-make app/Main.elm --output server/wwwroot/js/site.js"
+    "restore": "elm-package install && dotnet restore",
+    "build": "elm-make app/Main.elm --output server/wwwroot/js/site.js",
+    "serve": "npm run build && dotnet run -p server/"
   },
   "author": "Jacob Scearcy",
   "license": "ISC",
