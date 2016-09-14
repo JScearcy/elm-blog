@@ -16,6 +16,10 @@ options =
 view : Model -> Html Msg
 view { input } =
     div []
-        [ textarea [ rows 15, class "post-input", id "post-area",  onInput TextChange ] []
-        , toHtmlWith options [ class "preview" ] input
+        [ div [ class "create-post-content" ] 
+            [ textarea [ rows 15, class "post-input", id "post-area",  onInput TextChange ] [] 
+            ]
+        , div [ class "create-post-content" ] 
+            [ toHtmlWith options [ class "preview" ] input 
+            ]
         ]

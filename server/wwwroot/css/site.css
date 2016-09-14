@@ -77,8 +77,9 @@ textarea {
     width: 60em;
 }
 
-.preview {
-    width: 50%;
+.create-post-content {
+    margin: 2em auto;
+    width: 80%
 }
 
 .preview > pre {
@@ -91,4 +92,9 @@ textarea {
 
 pre, kbd, code, samp {
     font-family: FiraCode;
+}
+
+pre code {
+    white-space: pre;
+    overflow-x: auto;
 }
