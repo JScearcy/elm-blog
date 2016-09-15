@@ -1,7 +1,7 @@
 module CreatePost exposing (..)
 
 import Html.App as App
-import CreatePost.Update exposing (update, init, Msg(..))
+import CreatePost.Update exposing (update, init, Msg(..), subscriptions)
 import CreatePost.View exposing (view)
 
 
@@ -11,5 +11,5 @@ main =
         { init = init
         , update = update
         , view = view
-        , subscriptions = (\_ -> Sub.none)
+        , subscriptions = subscriptions
         }
