@@ -3,6 +3,10 @@ module Main exposing (..)
 import Html exposing (Html, text, section, div, p, a)
 import Html.Attributes exposing (class, href, style)
 import Html.App as App
+import Json.Decode as Json
+import Json.Decode.Pipeline exposing (..)
+import Http
+import Task
 
 
 main : Program Never
@@ -25,21 +29,17 @@ type alias Model =
 
 
 type alias Blog =
-    { title : String
-    , url : String
+    { id : Int
+    , title : String
+    , body : String
     , img : String
+    , url : String
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    Model
-        [ { title = "Blog1", url = "http://localhost:5000", img = "https://i.imgur.com/aha9awt.png" }
-        , { title = "Blog2", url = "http://localhost:5000", img = "https://i.imgur.com/aha9awt.png" }
-        , { title = "Blog3", url = "http://localhost:5000", img = "https://i.imgur.com/aha9awt.png" }
-        , { title = "Blog4", url = "http://localhost:5000", img = "https://i.imgur.com/aha9awt.png" }
-        ]
-        ! []
+    { blogs = [] } ! [ getPosts ]
 
 
 
@@ -48,6 +48,8 @@ init =
 
 type Msg
     = Create
+    | GetPosts (List Blog)
+    | Error Http.Error
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -55,6 +57,16 @@ update msg model =
     case msg of
         Create ->
             model ! []
+
+        GetPosts blogsResponse ->
+            { model | blogs = blogsResponse } ! []
+
+        Error err ->
+            let
+                _ = 
+                    Debug.log "Error" "error"
+            in
+                model ! []
 
 
 
@@ -87,3 +99,22 @@ blogViewHelper { img, title, url } =
 imageHelper : String -> ( String, String )
 imageHelper url =
     ( "background-image", "url(" ++ url ++ ")" )
+
+
+postsDecoder : Json.Decoder (List Blog)
+postsDecoder =
+    Json.list postDecoder
+
+postDecoder : Json.Decoder Blog
+postDecoder =
+    decode Blog
+        |> required "postId" Json.int
+        |> required "postTitle" Json.string
+        |> required "postBody" Json.string
+        |> required "imgUrl" Json.string
+        |> required "linkUrl" Json.string
+
+getPosts : Cmd Msg
+getPosts =
+    Http.get postsDecoder "/CreatePost/Posts/" 
+        |> Task.perform Error GetPosts

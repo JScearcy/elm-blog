@@ -7,5 +7,6 @@ namespace WebApplication.Models
         public string PostTitle { get; set; }
         public string PostBody { get; set; }
         public string ImgUrl { get; set; }
+        public string LinkUrl { get; set; }
     }
 }
