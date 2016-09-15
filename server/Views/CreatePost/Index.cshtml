@@ -14,7 +14,6 @@
             window.tabObject = e;
             e.target.value = e.target.value.substring(0, start) + "    " + e.target.value.substring(end);
             e.target.setSelectionRange(start + 4, end + 4);
-            console.log(e.target.selectionStart, start);
         }
     });
 </script>
