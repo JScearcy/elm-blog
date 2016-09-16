@@ -31,7 +31,7 @@ namespace WebApplication.Controllers
         public IActionResult Post(int? id) 
         {
             if(id == null) return this.Error();
-
+            var test = Request;
             var post = _blogPostsService.GetPost(id.GetValueOrDefault());
             return Json(post);
         }
@@ -40,7 +40,7 @@ namespace WebApplication.Controllers
         public IActionResult Post(Post post)
         {
             if(post == null) return this.Error();
-            var newPosts = _blogPostsService.InsertPost(post);
+            var newPosts = _blogPostsService.InsertPost(post, Request.Host.ToString(), Request.Path.ToString());
             return Json(newPosts);
         }
 
@@ -49,6 +49,14 @@ namespace WebApplication.Controllers
         {
             var posts = _blogPostsService.GetPosts();
             return Json(posts);
+        }
+
+        [HttpDelete]
+        public IActionResult RemovePost(Post post)
+        {
+            if(post == null) return this.Error();
+            var newPosts = _blogPostsService.RemovePost(post);
+            return Json(newPosts);
         }
     }
 }
