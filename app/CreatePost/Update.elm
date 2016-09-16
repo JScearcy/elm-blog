@@ -5,19 +5,27 @@ import CreatePost.Model exposing (Model)
 
 init : ( Model, Cmd Msg )
 init =
-    { input = "" } ! []
+    { body = "", title = "", img = "" } ! []
 
 
 type Msg
-    = TextChange String
+    = BodyChange String
+    | TitleChange String
+    | ImgChange String
     | Post
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        TextChange text ->
-            { model | input = text } ! []
+        BodyChange text ->
+            { model | body = text } ! []
+
+        TitleChange title ->
+            { model | title = title } ! []
+
+        ImgChange imgUrl ->
+            { model | img = imgUrl } ! []
 
         Post ->
             let

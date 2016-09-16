@@ -2,5 +2,7 @@ module CreatePost.Model exposing (Model)
 
 
 type alias Model =
-    { input : String
+    { body : String
+    , title : String
+    , img : String
     }
