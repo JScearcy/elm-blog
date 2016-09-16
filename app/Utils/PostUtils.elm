@@ -32,3 +32,8 @@ getPosts : (List Blog -> msg) -> (Http.Error -> msg) -> Cmd msg
 getPosts msg errMsg =
     Http.get postsDecoder "/CreatePost/Posts/" 
         |> Task.perform errMsg msg
+
+getPost : String -> (Blog -> msg) -> (Http.Error -> msg) -> Cmd msg
+getPost url msg errMsg =
+    Http.get postDecoder url
+        |> Task.perform errMsg msg

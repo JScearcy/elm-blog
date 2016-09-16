@@ -37,7 +37,7 @@ namespace WebApplication.Services
             db.Posts.Add(post);
             db.SaveChanges();
             
-            post.LinkUrl = $"http://{host}{path}{post.PostId}";
+            post.LinkUrl = $"{path}/{post.PostId}".TrimStart('/');
             db.Posts.Update(post);
             db.SaveChanges();
 

@@ -1,15 +1,37 @@
 module Main exposing (..)
 
-import Html.App as App
+import Navigation
 import Main.View exposing (view)
-import Main.Update exposing (subscriptions, update, init, Msg)
+import Main.Update exposing (subscriptions, update, initModel, Msg(..))
+import Main.Model exposing (Model)
+import Main.Routing exposing (Route(..), routeFromResult, parser)
+import Utils.PostUtils exposing (Blog, getPosts)
 
 
 main : Program Never
 main =
-    App.program
+    Navigation.program parser
         { init = init
-        , update = update
         , view = view
+        , update = update
+        , urlUpdate = urlUpdate
         , subscriptions = subscriptions
         }
+
+
+init : Result String Route -> ( Model, Cmd Msg )
+init result =
+    let
+        currentRoute =
+            routeFromResult result
+    in
+        initModel currentRoute ! [ getPosts GetPosts Error ]
+
+
+urlUpdate : Result String Route -> Model -> ( Model, Cmd Msg )
+urlUpdate result model =
+    let
+        currentRoute =
+            Debug.log "route" (routeFromResult result)
+    in
+        { model | route = currentRoute } ! []
