@@ -11,35 +11,37 @@ import Utils.PostUtils exposing (Blog)
 import Markdown exposing (Options, defaultOptions, toHtmlWith)
 import CreatePost.View
 
+
 view : Model -> Html Msg
 view model =
     article [] [ page model ]
+
 
 page : Model -> Html Msg
 page model =
     case model.route of
         SingleBlog id ->
-            section [ class "row row-centered" ] 
-                [ blogPage id model 
+            section [ class "row row-centered" ]
+                [ blogPage id model
                 ]
 
         AllBlogs ->
-            section [ class "row row-centered" ] 
-            [ button [ onClick CreateBlog ] [ text "Create" ]
-            , div [] <| List.map blogsViewHelper model.blogs 
-            ]
+            section [ class "row row-centered" ]
+                [ button [ onClick CreateBlog ] [ text "Create" ]
+                , div [] <| List.map blogsViewHelper model.blogs
+                ]
 
         Create ->
             CreatePost.View.view model.createPage
-                |> Html.App.map CreatePostMsg 
+                |> Html.App.map CreatePostMsg
 
-        NotFoundRoute -> 
+        NotFoundRoute ->
             notFoundView
 
 
 blogsViewHelper : Blog -> Html Msg
 blogsViewHelper { img, title, url, id } =
-    div [ class "col-md-3 col-sm-2 col-centered blog-container", style [ imageHelper img ], onClick <| ShowBlog id <| "#" ++ url   ]
+    div [ class "col-md-3 col-sm-2 col-centered blog-container", style [ imageHelper img ], onClick <| ShowBlog id <| "#" ++ url ]
         [ div [ class "blog-header" ]
             [ text title ]
         ]
@@ -49,26 +51,30 @@ imageHelper : String -> ( String, String )
 imageHelper url =
     ( "background-image", "url(" ++ url ++ ")" )
 
+
 options : Options
 options =
     { defaultOptions | defaultHighlighting = Just "elm" }
 
+
 blogPage : Int -> Model -> Html Msg
 blogPage id model =
-    let 
+    let
         currentBlog =
             blogFinder id model.blogs
     in
-    div [] 
-        [ h1 [] [ text currentBlog.title ]
-        , div [ class "preview" ] [ toHtmlWith options [ class "preview" ] currentBlog.body ]
-        ]
+        div []
+            [ h1 [] [ text currentBlog.title ]
+            , div [ class "preview" ] [ toHtmlWith options [ class "preview" ] currentBlog.body ]
+            ]
+
 
 blogFinder : Int -> List Blog -> Blog
 blogFinder id blogs =
     List.filter (\blog -> blog.id == id) blogs
         |> List.head
         |> maybeBlogResolve
+
 
 maybeBlogResolve : Maybe Blog -> Blog
 maybeBlogResolve maybeBlog =

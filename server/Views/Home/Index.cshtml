@@ -3,6 +3,7 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script>
     Elm.Main.embed(document.getElementById('elmApp'));
+    
     document.getElementById("elmApp").addEventListener("keydown", function (e) {
         if (e.target.id === "post-area" && e.keyCode === 9) {
             e.preventDefault();

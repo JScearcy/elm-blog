@@ -8,7 +8,6 @@ import Navigation
 import CreatePost.Update exposing (init)
 
 
-
 type Msg
     = GetPosts (List Blog)
     | ShowBlog Int String
@@ -27,27 +26,27 @@ update msg model =
     case msg of
         GetPosts blogsResponse ->
             { model | blogs = blogsResponse } ! []
-        
+
         ShowBlog id url ->
             model ! [ Navigation.newUrl url ]
-        
+
         CreateBlog ->
             model ! [ Navigation.newUrl "#CreatePost" ]
 
         CreatePostMsg msg ->
             let
-                ( createModel, newMsg) =
+                ( createModel, newMsg ) =
                     CreatePost.Update.update msg model.createPage
             in
                 { model | createPage = createModel } ! [ Cmd.map CreatePostMsg newMsg ]
 
         Error err ->
             let
-                _ = 
+                _ =
                     Debug.log "Error" "error"
             in
                 model ! []
-                
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =

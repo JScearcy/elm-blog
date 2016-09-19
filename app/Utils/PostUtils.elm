@@ -19,6 +19,7 @@ postsDecoder : Json.Decoder (List Blog)
 postsDecoder =
     Json.list postDecoder
 
+
 postDecoder : Json.Decoder Blog
 postDecoder =
     decode Blog
@@ -28,10 +29,12 @@ postDecoder =
         |> required "imgUrl" Json.string
         |> required "linkUrl" Json.string
 
+
 getPosts : (List Blog -> msg) -> (Http.Error -> msg) -> Cmd msg
 getPosts msg errMsg =
-    Http.get postsDecoder "/CreatePost/Posts/" 
+    Http.get postsDecoder "/CreatePost/Posts/"
         |> Task.perform errMsg msg
+
 
 getPost : String -> (Blog -> msg) -> (Http.Error -> msg) -> Cmd msg
 getPost url msg errMsg =
