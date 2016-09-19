@@ -16,6 +16,11 @@ namespace WebApplication.Controllers
         {
           _blogPostsService = blogPostsService;
         }
+        
+        public IActionResult Error()
+        {
+            return View();
+        }
 
         [HttpGet]
         [Route("CreatePost/Post/{id}")]
