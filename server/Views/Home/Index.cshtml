@@ -3,4 +3,15 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script>
     Elm.Main.embed(document.getElementById('elmApp'));
+    document.getElementById("elmApp").addEventListener("keydown", function (e) {
+        if (e.target.id === "post-area" && e.keyCode === 9) {
+            e.preventDefault();
+            var start = e.target.selectionStart,
+                end = e.target.selectionEnd;
+
+            window.tabObject = e;
+            e.target.value = e.target.value.substring(0, start) + "    " + e.target.value.substring(end);
+            e.target.setSelectionRange(start + 4, end + 4);
+        }
+    });
 </script>

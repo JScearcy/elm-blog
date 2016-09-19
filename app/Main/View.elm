@@ -1,6 +1,7 @@
 module Main.View exposing (view)
 
 import Html exposing (a, div, text, section, article, button, h1, Html)
+import Html.App
 import Html.Attributes exposing (class, href, style)
 import Html.Events exposing (onClick)
 import Main.Model exposing (Model)
@@ -8,6 +9,7 @@ import Main.Update exposing (Msg(..))
 import Main.Routing exposing (Route(..))
 import Utils.PostUtils exposing (Blog)
 import Markdown exposing (Options, defaultOptions, toHtmlWith)
+import CreatePost.View
 
 view : Model -> Html Msg
 view model =
@@ -28,7 +30,8 @@ page model =
             ]
 
         Create ->
-            notFoundView
+            CreatePost.View.view model.createPage
+                |> Html.App.map CreatePostMsg 
 
         NotFoundRoute -> 
             notFoundView

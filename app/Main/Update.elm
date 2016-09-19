@@ -5,18 +5,21 @@ import Utils.PostUtils exposing (Blog, getPosts)
 import Main.Model exposing (Model)
 import Main.Routing exposing (Route)
 import Navigation
+import CreatePost.Update exposing (init)
+
 
 
 type Msg
     = GetPosts (List Blog)
     | ShowBlog Int String
     | CreateBlog
+    | CreatePostMsg CreatePost.Update.Msg
     | Error Http.Error
 
 
 initModel : Route -> Model
 initModel route =
-    { blogs = [], route = route }
+    { blogs = [], createPage = init |> fst, route = route }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -30,6 +33,13 @@ update msg model =
         
         CreateBlog ->
             model ! [ Navigation.newUrl "#CreatePost" ]
+
+        CreatePostMsg msg ->
+            let
+                ( createModel, newMsg) =
+                    CreatePost.Update.update msg model.createPage
+            in
+                { model | createPage = createModel } ! [ Cmd.map CreatePostMsg newMsg ]
 
         Error err ->
             let
