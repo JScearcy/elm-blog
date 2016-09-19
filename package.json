@@ -4,7 +4,7 @@
   "description": "A simple blog site using elm and .net core",
   "main": "index.js",
   "scripts": {
-    "restore": "elm-package install & dotnet restore",
+    "restore": "elm-package install && dotnet restore",
     "build": "elm-make app/Main.elm --output server/wwwroot/js/site.js && elm-make app/CreatePost.elm --output server/wwwroot/js/post.js",
     "serve": "npm run build & dotnet run -p server/"
   },
