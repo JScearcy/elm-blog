@@ -1,6 +1,8 @@
 module CreatePost.Update exposing (update, init, Msg(..), subscriptions)
 
 import CreatePost.Model exposing (Model)
+import Utils.PostUtils exposing (Blog, createBlog)
+import Http
 
 
 init : ( Model, Cmd Msg )
@@ -13,6 +15,8 @@ type Msg
     | TitleChange String
     | ImgChange String
     | Post
+    | CreateSuccess (List Blog)
+    | CreateFail Http.Error
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -29,8 +33,22 @@ update msg model =
 
         Post ->
             let
+                blogPost =
+                    Blog 0 model.title model.body model.img ""
+            in
+                model ! [ createBlog blogPost CreateSuccess CreateFail ]
+
+        CreateSuccess blogs ->
+            let
                 _ =
-                    Debug.log "model" model
+                    Debug.log "Blogs" blogs
+            in
+                fst init ! []
+
+        CreateFail err ->
+            let
+                _ =
+                    Debug.log "Error" err
             in
                 model ! []
 
