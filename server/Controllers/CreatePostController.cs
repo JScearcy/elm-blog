@@ -16,7 +16,7 @@ namespace WebApplication.Controllers
         {
           _blogPostsService = blogPostsService;
         }
-        
+
         public IActionResult Error()
         {
             return View();
@@ -33,8 +33,9 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Post post)
+        public IActionResult Post([FromBody] Post post)
         {
+            var request = Request;
             if(post == null) return this.Error();
             var newPosts = _blogPostsService.InsertPost(post, Request.Host.ToString(), Request.Path.ToString());
             return Json(newPosts);
