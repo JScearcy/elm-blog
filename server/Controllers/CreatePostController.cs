@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Models;
 using WebApplication.Services;
@@ -35,8 +31,7 @@ namespace WebApplication.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Post post)
         {
-            var request = Request;
-            if(post == null) return this.Error();
+            if(post == null || !ModelState.IsValid) return this.Error();
             var newPosts = _blogPostsService.InsertPost(post, Request.Host.ToString(), Request.Path.ToString());
             return Json(newPosts);
         }
