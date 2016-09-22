@@ -2,7 +2,7 @@ module CreatePost.Update exposing (update, init, subscriptions)
 
 import CreatePost.Model exposing (Model)
 import Utils.PostUtils exposing (Blog, encodeBlog)
-import Utils.Ports exposing (postBlog)
+import Utils.Ports exposing (postBlog, postBlogSuccess)
 import Json.Encode as JE
 import Http
 import CreatePost.Messages exposing (Msg(..))

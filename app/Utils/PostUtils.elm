@@ -1,4 +1,4 @@
-module Utils.PostUtils exposing (Blog, getPosts, encodeBlog)
+module Utils.PostUtils exposing (Blog, getPosts, encodeBlog, postsDecoder)
 
 import Json.Decode as Json
 import Json.Decode.Pipeline exposing (decode, required)

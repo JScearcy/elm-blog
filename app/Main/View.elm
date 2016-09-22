@@ -5,7 +5,7 @@ import Html.App
 import Html.Attributes exposing (class, href, style)
 import Html.Events exposing (onClick)
 import Main.Model exposing (Model)
-import Main.Update exposing (Msg(..))
+import Main.Messages exposing (Msg(..))
 import Main.Routing exposing (Route(..))
 import Utils.PostUtils exposing (Blog)
 import Markdown exposing (Options, defaultOptions, toHtmlWith)

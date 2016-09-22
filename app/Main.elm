@@ -2,7 +2,8 @@ module Main exposing (..)
 
 import Navigation
 import Main.View exposing (view)
-import Main.Update exposing (subscriptions, update, initModel, Msg(..))
+import Main.Update exposing (subscriptions, update, initModel)
+import Main.Messages exposing (Msg(..))
 import Main.Model exposing (Model)
 import Main.Routing exposing (Route(..), routeFromResult, parser)
 import Utils.PostUtils exposing (Blog, getPosts)
@@ -32,6 +33,6 @@ urlUpdate : Result String Route -> Model -> ( Model, Cmd Msg )
 urlUpdate result model =
     let
         currentRoute =
-            Debug.log "route" (routeFromResult result)
+            routeFromResult result
     in
         { model | route = currentRoute } ! []

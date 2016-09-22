@@ -1,26 +1,20 @@
 module Main.Update exposing (..)
 
 import Http
-import Utils.PostUtils exposing (Blog, getPosts)
-import Utils.Ports exposing (postBlogResponse)
+import Json.Decode as JD
+import Utils.PostUtils exposing (Blog, getPosts, postsDecoder)
+import Utils.Ports exposing (postBlogSuccess)
 import Main.Model exposing (Model)
 import Main.Routing exposing (Route)
+import Main.Messages exposing (Msg(..))
 import Navigation
-import CreatePost.Update exposing (init)
+import CreatePost.Update
 import CreatePost.Messages
-
-
-type Msg
-    = GetPosts (List Blog)
-    | ShowBlog Int String
-    | CreateBlog
-    | CreatePostMsg CreatePost.Messages.Msg
-    | Error Http.Error
 
 
 initModel : Route -> Model
 initModel route =
-    { blogs = [], createPage = init |> fst, route = route }
+    { blogs = [], createPage = CreatePost.Update.init |> fst, route = route }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -42,6 +36,13 @@ update msg model =
             in
                 { model | createPage = createModel } ! [ Cmd.map CreatePostMsg newMsg ]
 
+        DecodeError err ->
+            let
+                _ =
+                    Debug.log "Error" err
+            in
+                model ! []
+
         Error err ->
             let
                 _ =
@@ -52,6 +53,30 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        [ postBlogResponse (\() -> CreatePostMsg <| CreatePost.Messages.CreateSuccess [])
-        ]
+    combinePostBlogSuccesses [ Just createPostMessage, Just GetPosts ]
+        |> Sub.batch
+
+
+createPostMessage : List Blog -> Msg
+createPostMessage =
+    CreatePost.Messages.CreateSuccess >> CreatePostMsg
+
+
+combinePostBlogSuccesses : List (Maybe (List Blog -> Msg)) -> List (Sub Msg)
+combinePostBlogSuccesses msgs =
+    List.map (decodePostResponse >> postBlogSuccess) msgs
+
+
+decodePostResponse : Maybe (List Blog -> Msg) -> JD.Value -> Msg
+decodePostResponse msg json =
+    case JD.decodeValue postsDecoder json of
+        Err err ->
+            DecodeError err
+
+        Ok blogs ->
+            case msg of
+                Nothing ->
+                    GetPosts blogs
+
+                Just msg ->
+                    msg blogs
