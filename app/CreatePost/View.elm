@@ -4,7 +4,7 @@ import Html exposing (Html, div, textarea, button, text, input)
 import Html.Attributes exposing (rows, class, id, placeholder)
 import Html.Events exposing (onInput, onClick)
 import Markdown exposing (Options, defaultOptions, toHtmlWith)
-import CreatePost.Update exposing (Msg(..))
+import CreatePost.Messages exposing (Msg(..))
 import CreatePost.Model exposing (Model)
 
 

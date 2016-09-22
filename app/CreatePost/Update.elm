@@ -1,22 +1,16 @@
-module CreatePost.Update exposing (update, init, Msg(..), subscriptions)
+module CreatePost.Update exposing (update, init, subscriptions)
 
 import CreatePost.Model exposing (Model)
-import Utils.PostUtils exposing (Blog, createBlog)
+import Utils.PostUtils exposing (Blog, encodeBlog)
+import Utils.Ports exposing (postBlog)
+import Json.Encode as JE
 import Http
+import CreatePost.Messages exposing (Msg(..))
 
 
 init : ( Model, Cmd Msg )
 init =
     { body = "", title = "", img = "" } ! []
-
-
-type Msg
-    = BodyChange String
-    | TitleChange String
-    | ImgChange String
-    | Post
-    | CreateSuccess (List Blog)
-    | CreateFail Http.Error
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -33,17 +27,14 @@ update msg model =
 
         Post ->
             let
-                blogPost =
-                    Blog 0 model.title model.body model.img ""
+                body =
+                    encodeBlog model
+                        |> JE.encode 0
             in
-                model ! [ createBlog blogPost CreateSuccess CreateFail ]
+                model ! [ postBlog body ]
 
         CreateSuccess blogs ->
-            let
-                _ =
-                    Debug.log "Blogs" blogs
-            in
-                fst init ! []
+            fst init ! []
 
         CreateFail err ->
             let

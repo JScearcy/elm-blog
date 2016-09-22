@@ -1,4 +1,4 @@
-module Utils.PostUtils exposing (Blog, getPosts, createBlog)
+module Utils.PostUtils exposing (Blog, getPosts, encodeBlog)
 
 import Json.Decode as Json
 import Json.Decode.Pipeline exposing (decode, required)
@@ -16,7 +16,7 @@ type alias Blog =
     }
 
 
-encodeBlog : Blog -> JE.Value
+encodeBlog : { body : String, title : String, img : String } -> JE.Value
 encodeBlog blog =
     JE.object
         [ ( "PostTitle", JE.string blog.title )
@@ -50,28 +50,6 @@ getPost : String -> (Blog -> msg) -> (Http.Error -> msg) -> Cmd msg
 getPost url msg errMsg =
     Http.get postDecoder url
         |> Task.perform errMsg msg
-
-
-createBlog : Blog -> (List Blog -> msg) -> (Http.Error -> msg) -> Cmd msg
-createBlog blog msg errMsg =
-    let
-        testEncode =
-            JE.encode 0 (encodeBlog blog)
-
-        testString =
-            Http.string testEncode
-
-        logger =
-            Debug.log "TestString" testString
-
-        logger' =
-            Debug.log "testEncode" testEncode
-    in
-        encodeBlog blog
-            |> JE.encode 0
-            |> Http.string
-            |> postJson postsDecoder "/CreatePost/Post"
-            |> Task.perform errMsg msg
 
 
 postJson : Json.Decoder a -> String -> Http.Body -> Task.Task Http.Error a
