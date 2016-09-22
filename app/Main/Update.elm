@@ -2,17 +2,19 @@ module Main.Update exposing (..)
 
 import Http
 import Utils.PostUtils exposing (Blog, getPosts)
+import Utils.Ports exposing (postBlogResponse)
 import Main.Model exposing (Model)
 import Main.Routing exposing (Route)
 import Navigation
 import CreatePost.Update exposing (init)
+import CreatePost.Messages
 
 
 type Msg
     = GetPosts (List Blog)
     | ShowBlog Int String
     | CreateBlog
-    | CreatePostMsg CreatePost.Update.Msg
+    | CreatePostMsg CreatePost.Messages.Msg
     | Error Http.Error
 
 
@@ -50,4 +52,6 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Sub.batch
+        [ postBlogResponse (\() -> CreatePostMsg <| CreatePost.Messages.CreateSuccess [])
+        ]
