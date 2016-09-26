@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication.Models
@@ -11,5 +12,6 @@ namespace WebApplication.Models
         public string PostBody { get; set; }
         public string ImgUrl { get; set; }
         public string LinkUrl { get; set; }
+        public DateTime? EditDate { get; set; }
     }
 }

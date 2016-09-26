@@ -13,7 +13,7 @@ type Route
 
 routeMatchers : Parser (Route -> a) a
 routeMatchers =
-    oneOf 
+    oneOf
         [ format SingleBlog (s "#CreatePost" </> s "Post" </> int)
         , format Create (s "#CreatePost")
         , format AllBlogs (s "")
