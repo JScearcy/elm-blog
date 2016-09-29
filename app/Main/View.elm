@@ -64,7 +64,8 @@ blogPage id model =
             blogFinder id model.blogs
     in
         div []
-            [ h1 [] [ text currentBlog.title ]
+            [ button [ onClick (RemoveBlog currentBlog) ] [ text "Remove" ]
+            , h1 [] [ text currentBlog.title ]
             , div [ class "preview" ] [ toHtmlWith options [ class "preview" ] currentBlog.body ]
             ]
 

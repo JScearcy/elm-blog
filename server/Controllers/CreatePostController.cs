@@ -43,8 +43,8 @@ namespace WebApplication.Controllers
             return Json(posts);
         }
 
-        [HttpDelete]
-        public IActionResult RemovePost(Post post)
+        [HttpPost]
+        public IActionResult RemovePost([FromBody] Post post)
         {
             if(post == null) return this.Error();
             var newPosts = _blogPostsService.RemovePost(post);

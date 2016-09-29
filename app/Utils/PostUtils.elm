@@ -1,4 +1,4 @@
-module Utils.PostUtils exposing (Blog, getPosts, encodeBlog, postsDecoder)
+module Utils.PostUtils exposing (Blog, getPosts, encodeBlog, postsDecoder, encodeBlogId)
 
 import Json.Decode as Json
 import Json.Decode.Pipeline exposing (decode, required)
@@ -22,6 +22,13 @@ encodeBlog blog =
         [ ( "PostTitle", JE.string blog.title )
         , ( "PostBody", JE.string blog.body )
         , ( "ImgUrl", JE.string blog.img )
+        ]
+
+
+encodeBlogId : Blog -> JE.Value
+encodeBlogId blog =
+    JE.object
+        [ ( "postId", JE.int blog.id )
         ]
 
 

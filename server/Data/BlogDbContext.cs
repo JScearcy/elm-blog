@@ -25,6 +25,7 @@ namespace WebApplication.Data
         public override int SaveChanges()
         {
             AddTimestamps();
+
             return base.SaveChanges();
         }
 

@@ -1,9 +1,9 @@
 module Main.Update exposing (..)
 
-import Http
 import Json.Decode as JD
-import Utils.PostUtils exposing (Blog, getPosts, postsDecoder)
-import Utils.Ports exposing (postBlogSuccess)
+import Json.Encode as JE
+import Utils.PostUtils exposing (Blog, getPosts, postsDecoder, encodeBlogId)
+import Utils.Ports exposing (postBlogSuccess, removeBlog)
 import Main.Model exposing (Model)
 import Main.Routing exposing (Route)
 import Main.Messages exposing (Msg(..))
@@ -35,6 +35,15 @@ update msg model =
                     CreatePost.Update.update msg model.createPage
             in
                 { model | createPage = createModel } ! [ Cmd.map CreatePostMsg newMsg ]
+
+        RemoveBlog currentBlog ->
+            let
+                body =
+                    encodeBlogId currentBlog
+                        |> JE.encode 0
+                        |> Debug.log "Body"
+            in
+                model ! [ removeBlog body ]
 
         DecodeError err ->
             let

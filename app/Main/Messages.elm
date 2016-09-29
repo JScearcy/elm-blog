@@ -9,6 +9,7 @@ type Msg
     = GetPosts (List Blog)
     | ShowBlog Int String
     | CreateBlog
+    | RemoveBlog Blog
     | CreatePostMsg CreatePost.Messages.Msg
     | DecodeError String
     | Error Http.Error
