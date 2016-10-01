@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Models;
 using WebApplication.Services;
@@ -13,6 +14,7 @@ namespace WebApplication.Controllers
           _blogPostsService = blogPostsService;
         }
 
+        [AllowAnonymous]
         public IActionResult Error()
         {
             return View();
@@ -20,6 +22,7 @@ namespace WebApplication.Controllers
 
         [HttpGet]
         [Route("CreatePost/Post/{id}")]
+        [AllowAnonymous]
         public IActionResult Post(int? id) 
         {
             if(id == null) return this.Error();
@@ -37,6 +40,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Posts()
         {
             var posts = _blogPostsService.GetPosts();

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication.Models
 {
-    public class Post 
+    public class Post : IDbItem
     {
         [Key]
         public int PostId { get; set; }
