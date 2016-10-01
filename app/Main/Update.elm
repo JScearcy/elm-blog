@@ -41,7 +41,6 @@ update msg model =
                 body =
                     encodeBlogId currentBlog
                         |> JE.encode 0
-                        |> Debug.log "Body"
             in
                 model ! [ removeBlog body ]
 
