@@ -14,7 +14,7 @@ import CreatePost.Messages
 
 initModel : Route -> Model
 initModel route =
-    { blogs = [], createPage = CreatePost.Update.init |> fst, route = route }
+    { blogs = [], createPage = CreatePost.Update.init |> fst, route = route, loggedIn = False }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

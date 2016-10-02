@@ -8,6 +8,7 @@ type Route
     = SingleBlog Int
     | AllBlogs
     | Create
+    | Login
     | NotFoundRoute
 
 
@@ -16,6 +17,7 @@ routeMatchers =
     oneOf
         [ format SingleBlog (s "#CreatePost" </> s "Post" </> int)
         , format Create (s "#CreatePost")
+        , format Login (s "#Login")
         , format AllBlogs (s "")
         ]
 

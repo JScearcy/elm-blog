@@ -1,14 +1,14 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebApplication.Models;
 
 namespace WebApplication.Data
 {
-    public class BlogDbContext : DbContext
+    public class BlogDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Post> Posts { get; private set; }
-        public DbSet<ApplicationUser> Users { get; private set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -17,8 +17,6 @@ namespace WebApplication.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<ApplicationUser>().ToTable("Users");
 
             modelBuilder.Entity<Post>().ToTable("Blogs");
             modelBuilder.Entity<Post>().HasKey(k => k.PostId);
@@ -34,11 +32,11 @@ namespace WebApplication.Data
 
         private void AddTimestamps()
         {
-            var entities = ChangeTracker.Entries().Where(x => x.Entity is Post && (x.State == EntityState.Added || x.State == EntityState.Modified));
+            var entities = ChangeTracker.Entries().Where(x => x.Entity is IDbItem && (x.State == EntityState.Added || x.State == EntityState.Modified));
 
             foreach (var entity in entities)
             {
-                ((Post)entity.Entity).EditDate = DateTime.UtcNow;
+                ((IDbItem)entity.Entity).EditDate = DateTime.UtcNow;
             }
         }
     }
