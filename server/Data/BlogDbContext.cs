@@ -10,6 +10,11 @@ namespace WebApplication.Data
     {
         public DbSet<Post> Posts { get; private set; }
 
+        public BlogDbContext (DbContextOptions<BlogDbContext> options)
+            : base(options)
+        {          
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Filename=./blog.db");

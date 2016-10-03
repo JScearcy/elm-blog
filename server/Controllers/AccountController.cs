@@ -12,23 +12,23 @@ using Newtonsoft.Json;
 using WebApplication.Models;
 using WebApplication.Services;
 
+[Route("users/[controller]/[action]")]
 public class AccountController : Controller
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly JwtIssuerOptions _jwtOptions;
-
     private readonly JsonSerializerSettings _serializerSettings;
-    private readonly ILogger _logger;
+    // private readonly ILogger _logger;
+
     public AccountController (SignInManager<ApplicationUser> signInManager,
         UserManager<ApplicationUser> userManager,
-        IOptions<JwtIssuerOptions> jwtOptions,
-        ILogger logger)
+        IOptions<JwtIssuerOptions> jwtOptions)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _jwtOptions = jwtOptions.Value;
-        _logger = logger;
+        // _logger = logger;
 
         _serializerSettings = new JsonSerializerSettings
         {
@@ -97,7 +97,7 @@ public class AccountController : Controller
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromForm] UserViewModel user)
+    public async Task<IActionResult> Login([FromBody] UserViewModel user)
     {
         var isValidUser = await IsValidUser(user);
         ClaimsIdentity identity = null;

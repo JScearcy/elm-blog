@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using WebApplication.Data;
 using WebApplication.Models;
 
@@ -11,7 +12,8 @@ namespace WebApplication.Services
         // TODO: Inject BlogDbContext
         public BlogPostsService()
         {
-            this.db = new BlogDbContext();
+            var options = new DbContextOptionsBuilder<BlogDbContext>();
+            this.db = new BlogDbContext(options.Options);
         }
 
         public List<Post> GetPosts() 

@@ -1,17 +1,18 @@
 (function(undefined) {
+    var POST_METHOD = 'POST';
     app.ports.postBlog.subscribe(function (blog) {
         var url = 'CreatePost/Post/',
             body = JSON.stringify(JSON.parse(blog));
-            postRequest(url, body);
+            executeRequest(createRequest(POST_METHOD, url, body));
     });
 
     app.ports.removeBlog.subscribe(function (blog) {
         var url = 'CreatePost/RemovePost/',
             body = JSON.stringify(JSON.parse(blog));
-            postRequest(url, body)
+            executeRequest(createRequest(POST_METHOD, url, body));
     });
 
-    function postRequest (url, body) {
+    function createRequest (method, url, body) {
         request = {
             method: 'POST',
             body: body,
@@ -20,11 +21,11 @@
             failure: console.error
         }
 
-        sendRequest(request);
+        return request;
     }
 
     // request is { body, failure, success, method, url }
-    function sendRequest (request) {
+    function executeRequest (request) {
         req = new XMLHttpRequest();
             
         req.open(request.method, request.url, true);
