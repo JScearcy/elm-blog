@@ -16,13 +16,6 @@ body {
     padding-right: 15px;
 }
 
-/* Set widths on the form inputs since otherwise they're 100% wide */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
-
 /* buttons and links extension to use brackets: [ click me ] */
 .btn-bracketed::before {
     display:inline-block;
@@ -109,4 +102,10 @@ pre code {
     height: 2em;
     font-size: 1.5em;
     margin-top: 1.25em;
+}
+
+.login-page {
+    width: 30em;
+    margin: 0 auto;
+    padding: 3em;
 }

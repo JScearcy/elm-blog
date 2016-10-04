@@ -4,6 +4,11 @@ import Login.Messages exposing (Msg(..))
 import Login.Model exposing (Model)
 
 
+init : Model
+init =
+    { username = "", password = "" }
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -14,4 +19,4 @@ update msg model =
             { model | password = password } ! []
 
         Login ->
-            model ! []
+            init ! []

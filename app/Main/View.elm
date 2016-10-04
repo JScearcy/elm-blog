@@ -10,6 +10,7 @@ import Main.Routing exposing (Route(..))
 import Utils.PostUtils exposing (Blog)
 import Markdown exposing (Options, defaultOptions, toHtmlWith)
 import CreatePost.View
+import Login.View
 
 
 view : Model -> Html Msg
@@ -34,6 +35,10 @@ page model =
         Create ->
             CreatePost.View.view model.createPage
                 |> Html.App.map CreatePostMsg
+
+        Login ->
+            Login.View.view model.login
+                |> Html.App.map LoginMsg
 
         NotFoundRoute ->
             notFoundView

@@ -3,18 +3,19 @@ module Main.Update exposing (..)
 import Json.Decode as JD
 import Json.Encode as JE
 import Utils.PostUtils exposing (Blog, getPosts, postsDecoder, encodeBlogId)
-import Utils.Ports exposing (postBlogSuccess, removeBlog)
+import Utils.Ports exposing (postBlogSuccess, removeBlog, loginRequest)
 import Main.Model exposing (Model)
 import Main.Routing exposing (Route)
 import Main.Messages exposing (Msg(..))
 import Navigation
 import CreatePost.Update
 import CreatePost.Messages
+import Login.Update
 
 
 initModel : Route -> Model
 initModel route =
-    { blogs = [], createPage = CreatePost.Update.init |> fst, route = route, loggedIn = False }
+    { blogs = [], createPage = CreatePost.Update.init |> fst, route = route, login = Login.Update.init, loggedIn = False }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -35,6 +36,16 @@ update msg model =
                     CreatePost.Update.update msg model.createPage
             in
                 { model | createPage = createModel } ! [ Cmd.map CreatePostMsg newMsg ]
+
+        LoginMsg msg ->
+            let
+                ( loginModel, newMsg ) =
+                    Login.Update.update msg model.login
+            in
+                { model | login = loginModel } ! [ Cmd.map LoginMsg newMsg ]
+
+        LoginRequest ->
+            model ! [ Navigation.newUrl "#Login" ]
 
         RemoveBlog currentBlog ->
             let
@@ -62,6 +73,7 @@ update msg model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     combinePostBlogSuccesses [ Just createPostMessage, Just GetPosts ]
+        |> (::) (loginRequest (\_ -> LoginRequest))
         |> Sub.batch
 
 
