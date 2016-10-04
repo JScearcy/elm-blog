@@ -36,9 +36,8 @@ page model =
             CreatePost.View.view model.createPage
                 |> Html.App.map CreatePostMsg
 
-        Login ->
-            Login.View.view model.login
-                |> Html.App.map LoginMsg
+        Main.Routing.Login ->
+            Login.View.view model
 
         NotFoundRoute ->
             notFoundView

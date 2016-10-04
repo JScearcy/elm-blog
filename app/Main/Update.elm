@@ -2,7 +2,9 @@ module Main.Update exposing (..)
 
 import Json.Decode as JD
 import Json.Encode as JE
-import Utils.PostUtils exposing (Blog, getPosts, postsDecoder, encodeBlogId)
+import Jwt
+import Task
+import Utils.PostUtils exposing (Blog, getPosts, postsDecoder, encodeBlogId, encodeUser, tokenStringDecoder)
 import Utils.Ports exposing (postBlogSuccess, removeBlog, loginRequest)
 import Main.Model exposing (Model)
 import Main.Routing exposing (Route)
@@ -10,12 +12,18 @@ import Main.Messages exposing (Msg(..))
 import Navigation
 import CreatePost.Update
 import CreatePost.Messages
-import Login.Update
 
 
 initModel : Route -> Model
 initModel route =
-    { blogs = [], createPage = CreatePost.Update.init |> fst, route = route, login = Login.Update.init, loggedIn = False }
+    { blogs = []
+    , createPage = CreatePost.Update.init |> fst
+    , route = route
+    , loggedIn = False
+    , username = ""
+    , password = ""
+    , token = ""
+    }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -36,13 +44,6 @@ update msg model =
                     CreatePost.Update.update msg model.createPage
             in
                 { model | createPage = createModel } ! [ Cmd.map CreatePostMsg newMsg ]
-
-        LoginMsg msg ->
-            let
-                ( loginModel, newMsg ) =
-                    Login.Update.update msg model.login
-            in
-                { model | login = loginModel } ! [ Cmd.map LoginMsg newMsg ]
 
         LoginRequest ->
             model ! [ Navigation.newUrl "#Login" ]
@@ -68,6 +69,29 @@ update msg model =
                     Debug.log "Error" "error"
             in
                 model ! []
+
+        UsernameInput str ->
+            { model | username = str } ! []
+
+        PasswordInput str ->
+            { model | password = str } ! []
+
+        Login ->
+            model ! [ loginJwt model ]
+
+        LoginFail err ->
+            let
+                _ =
+                    Debug.log "Error" err
+            in
+                model ! []
+
+        LoginSuccess token ->
+            let
+                createPost =
+                    model.createPage
+            in
+                { model | token = token, createPage = { createPost | token = Just token } } ! []
 
 
 subscriptions : Model -> Sub Msg
@@ -100,3 +124,19 @@ decodePostResponse msg json =
 
                 Just msg ->
                     msg blogs
+
+
+userCredentials : String -> String -> { username : String, password : String }
+userCredentials username password =
+    { username = username, password = password }
+
+
+loginJwt : Model -> Cmd Msg
+loginJwt { username, password } =
+    let
+        user =
+            userCredentials username password
+                |> encodeUser
+                |> JE.encode 0
+    in
+        Task.perform LoginFail LoginSuccess (Jwt.authenticate tokenStringDecoder "users/Account/Login" user)

@@ -1,6 +1,6 @@
-module Utils.PostUtils exposing (Blog, getPosts, encodeBlog, postsDecoder, encodeBlogId)
+module Utils.PostUtils exposing (Blog, getPosts, encodeBlog, postsDecoder, encodeBlogId, encodeUser, tokenStringDecoder)
 
-import Json.Decode as Json
+import Json.Decode as Json exposing (at)
 import Json.Decode.Pipeline exposing (decode, required)
 import Json.Encode as JE
 import Http
@@ -16,7 +16,15 @@ type alias Blog =
     }
 
 
-encodeBlog : { body : String, title : String, img : String } -> JE.Value
+encodeUser : { username : String, password : String } -> JE.Value
+encodeUser user =
+    JE.object
+        [ ( "username", JE.string user.username )
+        , ( "password", JE.string user.password )
+        ]
+
+
+encodeBlog : { body : String, title : String, img : String, token : Maybe String } -> JE.Value
 encodeBlog blog =
     JE.object
         [ ( "PostTitle", JE.string blog.title )
@@ -45,6 +53,11 @@ postDecoder =
         |> required "postBody" Json.string
         |> required "imgUrl" Json.string
         |> required "linkUrl" Json.string
+
+
+tokenStringDecoder : Json.Decoder String
+tokenStringDecoder =
+    Json.at [ "access_token" ] Json.string
 
 
 getPosts : (List Blog -> msg) -> (Http.Error -> msg) -> Cmd msg

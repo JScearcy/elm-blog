@@ -5,4 +5,5 @@ type alias Model =
     { body : String
     , title : String
     , img : String
+    , token : Maybe String
     }

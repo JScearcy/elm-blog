@@ -3,8 +3,8 @@ module Login.View exposing (view)
 import Html exposing (Html, div, input, button, text, form, h1)
 import Html.Attributes exposing (placeholder, class, type', value, id)
 import Html.Events exposing (onInput, onClick)
-import Login.Model exposing (Model)
-import Login.Messages exposing (Msg(..))
+import Main.Model exposing (Model)
+import Main.Messages exposing (Msg(..))
 
 
 view : Model -> Html Msg

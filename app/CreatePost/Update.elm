@@ -10,7 +10,7 @@ import CreatePost.Messages exposing (Msg(..))
 
 init : ( Model, Cmd Msg )
 init =
-    { body = "", title = "", img = "" } ! []
+    { body = "", title = "", img = "", token = Nothing } ! []
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

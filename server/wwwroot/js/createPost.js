@@ -1,4 +1,5 @@
 (function(document, undefined) {
+    'use strict';
     var POST_METHOD = 'POST';
     // listen for login button click, tell elm that the button has been clicked
     document.getElementById("login-btn").addEventListener("click", function(e) {
@@ -21,14 +22,16 @@
             executeRequest(createRequest(POST_METHOD, url, body));
     });
     // create a request to semd data to the server
-    function createRequest (method, url, body) {
-        request = {
-            method: 'POST',
-            body: body,
-            url: url,
-            success: app.ports.postBlogSuccess.send,
-            failure: console.error
-        }
+    function createRequest (method, url, body, succ, fail) {
+        var successHandler = succ || app.ports.postBlogSuccess.send,
+            failureHandler = fail || console.error,
+            request = {
+                method: 'POST',
+                body: body,
+                url: url,
+                success: successHandler,
+                failure: failureHandler
+            }
 
         return request;
     }
@@ -36,16 +39,17 @@
     // request is { body, failure, success, method, url }
     // take the request and send it to the server
     function executeRequest (request) {
-        req = new XMLHttpRequest();
-            
+        var req = new XMLHttpRequest();
+        
         req.open(request.method, request.url, true);
         req.setRequestHeader("Content-Type", "application/json");
         req.onreadystatechange = function reqComplete() {
-            var response = JSON.parse(req.responseText);
-            if(req.readyState === 4 && req.status === 200) {
+            if(req.readyState === 4 && req.status === 200) {  
+                var response = JSON.parse(req.responseText);
                 if (request.success) request.success(response);
-            } else {
-                if (request.failure) request.error(response);
+            } else if (req.readyState === 4 && req.status > 300) {
+                var response = JSON.parse(req.responseText);
+                if (request.failure) request.failure(response);
             }
         };
         req.send(request.body);
