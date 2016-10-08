@@ -28,7 +28,7 @@ page model =
 
         AllBlogs ->
             section [ class "row row-centered" ]
-                [ button [ onClick CreateBlog ] [ text "Create" ]
+                [ button [ onClick CreateBlog, class "pull-right submit-button" ] [ text "Create" ]
                 , div [] <| List.map blogsViewHelper model.blogs
                 ]
 
