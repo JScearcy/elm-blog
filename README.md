@@ -1,2 +1,2 @@
 # elm-blog
-    A simple blogger using ASP.NET Core and Elm.
+    A simple blogger POC using ASP.NET Core and Elm.
