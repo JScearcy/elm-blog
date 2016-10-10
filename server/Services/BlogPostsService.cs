@@ -32,7 +32,7 @@ namespace WebApplication.Services
             return post;
         }
 
-        public List<Post> InsertPost(Post post, string host, string path)
+        public List<Post> InsertPost(Post post, string path)
         {
             db.Posts.Add(post);
             db.SaveChanges();

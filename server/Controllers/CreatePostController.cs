@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication.Models;
@@ -26,16 +27,14 @@ namespace WebApplication.Controllers
         public IActionResult Post(int? id) 
         {
             if(id == null) return this.Error();
-            var test = Request;
-            var post = _blogPostsService.GetPost(id.GetValueOrDefault());
-            return Json(post);
+            return Json(_blogPostsService.GetPost(id.GetValueOrDefault()));
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] Post post)
         {
             if(post == null || !ModelState.IsValid) return this.Error();
-            var newPosts = _blogPostsService.InsertPost(post, Request.Host.ToString(), Request.Path.ToString());
+            var newPosts = _blogPostsService.InsertPost(post, Request.Path.ToString());
             return Json(newPosts);
         }
 
@@ -43,16 +42,14 @@ namespace WebApplication.Controllers
         [AllowAnonymous]
         public IActionResult Posts()
         {
-            var posts = _blogPostsService.GetPosts();
-            return Json(posts);
+            return Json(_blogPostsService.GetPosts());
         }
 
         [HttpPost]
         public IActionResult RemovePost([FromBody] Post post)
         {
             if(post == null) return this.Error();
-            var newPosts = _blogPostsService.RemovePost(post);
-            return Json(newPosts);
+            return Json(_blogPostsService.RemovePost(post));
         }
     }
 }

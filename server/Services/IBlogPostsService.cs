@@ -7,7 +7,7 @@ namespace WebApplication.Services
     {
         List<Post> GetPosts();
         Post GetPost(int id);
-        List<Post> InsertPost(Post post, string host, string path);
+        List<Post> InsertPost(Post post, string path);
         List<Post> RemovePost(Post post);
         Post UpdatePost(Post post);
     }
