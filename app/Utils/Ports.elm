@@ -12,7 +12,4 @@ port removeBlog : String -> Cmd a
 port postBlogSuccess : (JD.Value -> msg) -> Sub msg
 
 
-port loginRequest : (JD.Value -> msg) -> Sub msg
-
-
 port storeToken : String -> Cmd a

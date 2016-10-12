@@ -5,7 +5,7 @@ import Json.Encode as JE
 import Jwt
 import Task
 import Utils.PostUtils exposing (Blog, getPosts, postsDecoder, encodeBlogId, encodeUser, tokenStringDecoder)
-import Utils.Ports exposing (postBlogSuccess, removeBlog, loginRequest)
+import Utils.Ports exposing (postBlogSuccess, removeBlog)
 import Main.Model exposing (Model)
 import Main.Routing exposing (Route)
 import Main.Messages exposing (Msg(..))
@@ -22,7 +22,7 @@ initModel route =
     , loggedIn = False
     , username = ""
     , password = ""
-    , token = ""
+    , token = Nothing
     }
 
 
@@ -45,8 +45,8 @@ update msg model =
             in
                 { model | createPage = createModel } ! [ Cmd.map CreatePostMsg newMsg ]
 
-        LoginRequest ->
-            model ! [ Navigation.newUrl "#Login" ]
+        RouteRequest route ->
+            model ! [ Navigation.newUrl route ]
 
         RemoveBlog currentBlog ->
             let
@@ -91,13 +91,18 @@ update msg model =
                 createPost =
                     model.createPage
             in
-                { model | token = token, createPage = { createPost | token = Just token } } ! []
+                { model
+                    | token = Just token
+                    , createPage = { createPost | token = Just token }
+                    , username = ""
+                    , password = ""
+                }
+                    ! [ Navigation.newUrl "#CreatePost" ]
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     combinePostBlogSuccesses [ Just createPostMessage, Just GetPosts ]
-        |> (::) (loginRequest (\_ -> LoginRequest))
         |> Sub.batch
 
 

@@ -12,7 +12,7 @@ type Msg
     | CreateBlog
     | RemoveBlog Blog
     | CreatePostMsg CreatePost.Messages.Msg
-    | LoginRequest
+    | RouteRequest String
     | DecodeError String
     | Error Http.Error
     | UsernameInput String

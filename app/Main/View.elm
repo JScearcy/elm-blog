@@ -28,7 +28,7 @@ page model =
 
         AllBlogs ->
             section [ class "row row-centered" ]
-                [ button [ onClick CreateBlog, class "pull-right submit-button" ] [ text "Create" ]
+                [ createButton model.token
                 , div [] <| List.map blogsViewHelper model.blogs
                 ]
 
@@ -41,6 +41,16 @@ page model =
 
         NotFoundRoute ->
             notFoundView
+
+
+createButton : Maybe String -> Html Msg
+createButton token =
+    case token of
+        Just token ->
+            button [ onClick CreateBlog, class "pull-right submit-button" ] [ text "Create" ]
+
+        Nothing ->
+            div [] []
 
 
 blogsViewHelper : Blog -> Html Msg

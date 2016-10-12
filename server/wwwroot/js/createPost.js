@@ -1,10 +1,6 @@
 (function(document, undefined) {
     'use strict';
     var POST_METHOD = 'POST';
-    // listen for login button click, tell elm that the button has been clicked
-    document.getElementById("login-btn").addEventListener("click", function(e) {
-        app.ports.loginRequest.send();
-    });
     // remove default click events
     document.getElementById("elmApp").addEventListener("click", function(e) {
         e.preventDefault();

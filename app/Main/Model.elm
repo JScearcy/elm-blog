@@ -12,5 +12,5 @@ type alias Model =
     , loggedIn : Bool
     , username : String
     , password : String
-    , token : String
+    , token : Maybe String
     }
