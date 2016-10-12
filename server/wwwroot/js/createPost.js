@@ -1,9 +1,12 @@
 (function(document, undefined) {
     'use strict';
     var POST_METHOD = 'POST';
-    // remove default click events
+    // add blur on click of nav-buttons
     document.getElementById("elmApp").addEventListener("click", function(e) {
         e.preventDefault();
+        if (e.target.className.indexOf("nav-button") > -1) {
+            e.target.blur();
+        }
     });
     // listen for new blog data to come from the elm runtime and post it to the server
     app.ports.postBlog.subscribe(function (blog) {

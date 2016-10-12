@@ -1,8 +1,8 @@
 module Main.View exposing (view)
 
-import Html exposing (a, div, text, section, article, button, h1, Html)
+import Html exposing (a, div, text, section, article, button, h1, ul, li, hr, footer, p, Html)
 import Html.App
-import Html.Attributes exposing (class, href, style)
+import Html.Attributes exposing (class, href, style, type', id)
 import Html.Events exposing (onClick)
 import Main.Model exposing (Model)
 import Main.Messages exposing (Msg(..))
@@ -15,7 +15,36 @@ import Login.View
 
 view : Model -> Html Msg
 view model =
-    article [] [ page model ]
+    article
+        []
+        [ div
+            [ class "navbar navbar-inverse navbar-fixed-top" ]
+            [ div
+                [ class "container" ]
+                [ div
+                    [ class "navbar-header" ]
+                    [ button
+                        [ type' "button", class "navbar-toggle" ]
+                        []
+                    , a [ class "navbar-brand nav-button", href "#" ] [ text "Jacob Scearcy" ]
+                    ]
+                , div
+                    [ class "navbar-collapse collapse" ]
+                    [ ul
+                        [ class "nav navbar-nav" ]
+                        [ li [] [ a [ id "home-btn", class "nav-button", href "#", onClick (RouteRequest "#") ] [ text "Home" ] ]
+                        , li [] [ a [ id "login-btn", class "nav-button", href "#Login", onClick (RouteRequest "#Login") ] [ text "Login" ] ]
+                        ]
+                    ]
+                ]
+            ]
+        , div
+            [ class "container body-content" ]
+            [ page model
+            , hr [] []
+            , footer [] [ p [] [ text "&copy; 2016 - Jacob Scearcy" ] ]
+            ]
+        ]
 
 
 page : Model -> Html Msg
@@ -28,7 +57,7 @@ page model =
 
         AllBlogs ->
             section [ class "row row-centered" ]
-                [ createButton model.token
+                [ createButtonRender model.token
                 , div [] <| List.map blogsViewHelper model.blogs
                 ]
 
@@ -43,8 +72,8 @@ page model =
             notFoundView
 
 
-createButton : Maybe String -> Html Msg
-createButton token =
+createButtonRender : Maybe String -> Html Msg
+createButtonRender token =
     case token of
         Just token ->
             button [ onClick CreateBlog, class "pull-right submit-button" ] [ text "Create" ]
