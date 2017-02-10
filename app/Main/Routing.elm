@@ -15,29 +15,22 @@ type Route
 routeMatchers : Parser (Route -> a) a
 routeMatchers =
     oneOf
-        [ format SingleBlog (s "#CreatePost" </> s "Post" </> int)
-        , format Create (s "#CreatePost")
-        , format Login (s "#Login")
-        , format AllBlogs (s "")
+        [ map SingleBlog (s "CreatePost" </> s "Post" </> int)
+        , map Create (s "CreatePost")
+        , map Login (s "Login")
+        , map AllBlogs (s "")
         ]
 
 
-pathParser : Navigation.Location -> Result String Route
+pathParser : Navigation.Location -> Route
 pathParser location =
-    location.hash
-        |> parse identity routeMatchers
+    let
+        currentPath =
+            case parseHash routeMatchers location of
+                Just route ->
+                    route
 
-
-parser : Navigation.Parser (Result String Route)
-parser =
-    Navigation.makeParser pathParser
-
-
-routeFromResult : Result String Route -> Route
-routeFromResult result =
-    case result of
-        Ok route ->
-            route
-
-        Err string ->
-            NotFoundRoute
+                Nothing ->
+                    AllBlogs
+    in
+        currentPath

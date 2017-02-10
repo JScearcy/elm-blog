@@ -34,7 +34,7 @@ update msg model =
                 model ! [ postBlog body ]
 
         CreateSuccess blogs ->
-            fst init ! []
+            Tuple.first init ! []
 
         CreateFail err ->
             let

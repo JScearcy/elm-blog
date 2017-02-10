@@ -1,4 +1,4 @@
-module Utils.PostUtils exposing (Blog, getPosts, encodeBlog, postsDecoder, encodeBlogId, encodeUser, tokenStringDecoder)
+module Utils.PostUtils exposing (Blog, getPosts, encodeBlog, postsDecoder, encodeBlogId, encodeUser, tokenStringDecoder, resultToMsg)
 
 import Json.Decode as Json exposing (at)
 import Json.Decode.Pipeline exposing (decode, required)
@@ -13,6 +13,7 @@ type alias Blog =
     , body : String
     , img : String
     , url : String
+    , updated : String
     }
 
 
@@ -53,6 +54,7 @@ postDecoder =
         |> required "postBody" Json.string
         |> required "imgUrl" Json.string
         |> required "linkUrl" Json.string
+        |> required "editDate" Json.string
 
 
 tokenStringDecoder : Json.Decoder String
@@ -62,26 +64,21 @@ tokenStringDecoder =
 
 getPosts : (List Blog -> msg) -> (Http.Error -> msg) -> Cmd msg
 getPosts msg errMsg =
-    Http.get postsDecoder "/CreatePost/Posts/"
-        |> Task.perform errMsg msg
+    Http.get "/CreatePost/Posts/" postsDecoder
+        |> Http.send (resultToMsg msg errMsg)
 
 
 getPost : String -> (Blog -> msg) -> (Http.Error -> msg) -> Cmd msg
 getPost url msg errMsg =
-    Http.get postDecoder url
-        |> Task.perform errMsg msg
+    Http.get url postDecoder
+        |> Http.send (resultToMsg msg errMsg)
 
 
-postJson : Json.Decoder a -> String -> Http.Body -> Task.Task Http.Error a
-postJson decoder url body =
-    let
-        request =
-            { verb = "POST"
-            , headers =
-                [ ( "Content-Type", "application/x-www-form-urlencoded" )
-                ]
-            , url = url
-            , body = body
-            }
-    in
-        Http.fromJson decoder (Http.send Http.defaultSettings request)
+resultToMsg : (a -> msg) -> (Http.Error -> msg) -> Result Http.Error a -> msg
+resultToMsg success error res =
+    case res of
+        Err a ->
+            error a
+
+        Ok a ->
+            success a

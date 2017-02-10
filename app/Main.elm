@@ -5,34 +5,24 @@ import Main.View exposing (view)
 import Main.Update exposing (subscriptions, update, initModel)
 import Main.Messages exposing (Msg(..))
 import Main.Model exposing (Model)
-import Main.Routing exposing (Route(..), routeFromResult, parser)
+import Main.Routing exposing (Route(..), pathParser)
 import Utils.PostUtils exposing (Blog, getPosts)
 
 
-main : Program Never
+main : Program Never Model Msg
 main =
-    Navigation.program parser
+    Navigation.program UrlChange
         { init = init
         , view = view
         , update = update
-        , urlUpdate = urlUpdate
         , subscriptions = subscriptions
         }
 
 
-init : Result String Route -> ( Model, Cmd Msg )
-init result =
+init : Navigation.Location -> ( Model, Cmd Msg )
+init location =
     let
         currentRoute =
-            routeFromResult result
+            pathParser location
     in
         initModel currentRoute ! [ getPosts GetPosts Error ]
-
-
-urlUpdate : Result String Route -> Model -> ( Model, Cmd Msg )
-urlUpdate result model =
-    let
-        currentRoute =
-            routeFromResult result
-    in
-        { model | route = currentRoute } ! []

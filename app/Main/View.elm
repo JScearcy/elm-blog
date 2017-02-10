@@ -1,8 +1,7 @@
 module Main.View exposing (view)
 
 import Html exposing (a, div, text, section, article, button, h1, ul, li, hr, footer, p, Html)
-import Html.App
-import Html.Attributes exposing (class, href, style, type', id)
+import Html.Attributes exposing (class, href, style, type_, id, property)
 import Html.Events exposing (onClick)
 import Main.Model exposing (Model)
 import Main.Messages exposing (Msg(..))
@@ -11,6 +10,7 @@ import Utils.PostUtils exposing (Blog)
 import Markdown exposing (Options, defaultOptions, toHtmlWith)
 import CreatePost.View
 import Login.View
+import Json.Encode
 
 
 view : Model -> Html Msg
@@ -24,7 +24,7 @@ view model =
                 [ div
                     [ class "navbar-header" ]
                     [ button
-                        [ type' "button", class "navbar-toggle" ]
+                        [ type_ "button", class "navbar-toggle" ]
                         []
                     , a [ class "navbar-brand nav-button", href "#" ] [ text "Jacob Scearcy" ]
                     ]
@@ -42,7 +42,7 @@ view model =
             [ class "container body-content" ]
             [ page model
             , hr [] []
-            , footer [] [ p [] [ text "&copy; 2016 - Jacob Scearcy" ] ]
+            , footer [ property "innerHTML" (Json.Encode.string "&copy; 2017 - Jacob Scearcy") ] []
             ]
         ]
 
@@ -63,7 +63,7 @@ page model =
 
         Create ->
             CreatePost.View.view model.createPage
-                |> Html.App.map CreatePostMsg
+                |> Html.map CreatePostMsg
 
         Main.Routing.Login ->
             Login.View.view model
@@ -83,11 +83,17 @@ createButtonRender token =
 
 
 blogsViewHelper : Blog -> Html Msg
-blogsViewHelper { img, title, url, id } =
-    div [ class "col-md-3 col-sm-2 col-centered blog-container", style [ imageHelper img ], onClick <| ShowBlog id <| "#" ++ url ]
-        [ div [ class "blog-header" ]
-            [ text title ]
-        ]
+blogsViewHelper { img, title, url, id, updated } =
+    let
+        date =
+            String.split "T" updated
+                |> List.head
+                |> Maybe.withDefault ""
+    in
+        div [ class "col-md-3 col-sm-2 col-centered blog-container", style [ imageHelper img ], onClick <| ShowBlog id <| "#" ++ url ]
+            [ div [ class "blog-header" ]
+                [ text (title ++ " " ++ date) ]
+            ]
 
 
 imageHelper : String -> ( String, String )
@@ -105,9 +111,17 @@ blogPage id model =
     let
         currentBlog =
             blogFinder id model.blogs
+
+        removeButton =
+            case model.token of
+                Just token ->
+                    button [ onClick (RemoveBlog currentBlog) ] [ text "Remove" ]
+
+                Nothing ->
+                    div [] []
     in
         div []
-            [ button [ onClick (RemoveBlog currentBlog) ] [ text "Remove" ]
+            [ removeButton
             , h1 [] [ text currentBlog.title ]
             , div [ class "preview" ] [ toHtmlWith options [ class "preview" ] currentBlog.body ]
             ]
@@ -127,7 +141,7 @@ maybeBlogResolve maybeBlog =
             blog
 
         Nothing ->
-            { id = 0, title = "Not Found", body = "", img = "", url = "" }
+            { id = 0, title = "Not Found", body = "", img = "", url = "", updated = "" }
 
 
 notFoundView : Html msg

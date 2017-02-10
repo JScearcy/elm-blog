@@ -4,6 +4,7 @@ import Utils.PostUtils exposing (Blog)
 import CreatePost.Messages
 import Http
 import Jwt exposing (JwtError)
+import Navigation
 
 
 type Msg
@@ -20,3 +21,4 @@ type Msg
     | Login
     | LoginFail JwtError
     | LoginSuccess String
+    | UrlChange Navigation.Location

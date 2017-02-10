@@ -3,11 +3,10 @@ module Main.Update exposing (..)
 import Json.Decode as JD
 import Json.Encode as JE
 import Jwt
-import Task
 import Utils.PostUtils exposing (Blog, getPosts, postsDecoder, encodeBlogId, encodeUser, tokenStringDecoder)
 import Utils.Ports exposing (postBlogSuccess, removeBlog)
 import Main.Model exposing (Model)
-import Main.Routing exposing (Route)
+import Main.Routing exposing (Route, pathParser)
 import Main.Messages exposing (Msg(..))
 import Navigation
 import CreatePost.Update
@@ -17,8 +16,9 @@ import CreatePost.Messages
 initModel : Route -> Model
 initModel route =
     { blogs = []
-    , createPage = CreatePost.Update.init |> fst
+    , createPage = CreatePost.Update.init |> Tuple.first
     , route = route
+    , routeHistory = [ route ]
     , loggedIn = False
     , username = ""
     , password = ""
@@ -29,6 +29,13 @@ initModel route =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        UrlChange location ->
+            let
+                currentPath =
+                    pathParser location
+            in
+                { model | route = currentPath } ! []
+
         GetPosts blogsResponse ->
             { model | blogs = blogsResponse } ! []
 
@@ -140,8 +147,20 @@ loginJwt : Model -> Cmd Msg
 loginJwt { username, password } =
     let
         user =
-            userCredentials username password
-                |> encodeUser
-                |> JE.encode 0
+            JE.object
+                [ ( "username", JE.string username )
+                , ( "password", JE.string password )
+                ]
     in
-        Task.perform LoginFail LoginSuccess (Jwt.authenticate tokenStringDecoder "users/Account/Login" user)
+        Jwt.authenticate "users/Account/Login" tokenStringDecoder user
+            |> Jwt.send loginResultToMsg
+
+
+loginResultToMsg : Result Jwt.JwtError String -> Msg
+loginResultToMsg res =
+    case res of
+        Err a ->
+            LoginFail a
+
+        Ok a ->
+            LoginSuccess a
