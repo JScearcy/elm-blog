@@ -46,7 +46,6 @@ public class AccountController : Controller
             var result = await _userManager.CreateAsync(newUser, user.Password);
             if (result.Succeeded)
             {
-                // await _signInManager.SignInAsync(newUser, isPersistent: false);
                 return Json($"Created {user.Username}");
             }
             return Json(result.Errors);
