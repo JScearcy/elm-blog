@@ -1,10 +1,9 @@
-module Utils.PostUtils exposing (Blog, getPosts, encodeBlog, postsDecoder, encodeBlogId, encodeUser, tokenStringDecoder, resultToMsg)
+module Utils.PostUtils exposing (RawBlog, Blog, getPosts, encodeBlog, postsDecoder, encodeBlogId, encodeUser, tokenStringDecoder, resultToMsg, rawBlogToBlog)
 
 import Json.Decode as Json exposing (at)
 import Json.Decode.Pipeline exposing (decode, required)
 import Json.Encode as JE
 import Http
-import Task
 
 
 type alias Blog =
@@ -14,6 +13,27 @@ type alias Blog =
     , img : String
     , url : String
     , updated : String
+    }
+
+
+type alias RawBlog =
+    { postId : Int
+    , postTitle : String
+    , postBody : String
+    , imgUrl : String
+    , linkUrl : String
+    , editDate : String
+    }
+
+
+rawBlogToBlog : RawBlog -> Blog
+rawBlogToBlog raw =
+    { id = raw.postId
+    , title = raw.postTitle
+    , body = raw.postBody
+    , img = raw.imgUrl
+    , url = raw.linkUrl
+    , updated = raw.editDate
     }
 
 

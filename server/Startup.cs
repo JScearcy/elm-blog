@@ -1,16 +1,15 @@
-using System.IO.Compression;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
 using WebApplication.Data;
 using WebApplication.Models;
 using WebApplication.Services;
@@ -57,7 +56,8 @@ namespace WebApplication
                      .RequireAuthenticatedUser()
                      .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
-            });
+            })
+            .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());;
 
             services.AddOptions();
             var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));

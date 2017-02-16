@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using WebApplication.Services;
@@ -21,7 +17,9 @@ namespace WebApplication.Controllers
         public IActionResult Index()
         {
             var posts = _blogPostsService.GetPosts();
-            var model = new Posts(posts);
+
+            var model = new HomeViewModel(posts);
+
             return View(model);
         }
 

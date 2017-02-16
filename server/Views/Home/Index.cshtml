@@ -1,7 +1,7 @@
 @using WebApplication.Models
-@model WebApplication.Models.Posts
-<div id="elmApp">
-     <div class="navbar navbar-inverse navbar-fixed-top">
+@model WebApplication.Models.HomeViewModel
+<div id="server-data">
+    <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -23,7 +23,7 @@
     <div class="container body-content">
         <section class="row row-centered">
             <div>
-            @foreach (Post post in Model.All) 
+            @foreach (Post post in Model.Posts.All) 
             {
                 <a href="#@(post.LinkUrl)">
                     <div class="col-md-3 col-sm-2 col-centered blog-container" style="background-image: url('@(post.ImgUrl)');">
@@ -41,20 +41,12 @@
         </footer>
     </div>
 </div>
-<script src="~/js/site.js" asp-append-version="true"></script>
-<script>
-    var app = Elm.Main.embed(document.getElementById('elmApp'));
-    
-    document.getElementById("elmApp").addEventListener("keydown", function (e) {
-        if (e.target.id === "post-area" && e.keyCode === 9) {
-            e.preventDefault();
-            var start = e.target.selectionStart,
-                end = e.target.selectionEnd;
-
-            window.tabObject = e;
-            e.target.value = e.target.value.substring(0, start) + "    " + e.target.value.substring(end);
-            e.target.setSelectionRange(start + 4, end + 4);
-        }
-    });
+<div id="elmApp">
+     
+</div>
+<script src="~/js/site.js" type="application/javascript" asp-append-version="true"></script>
+<script type="application/javascript">
+    const createPostUrl = '@Url.Content("~/js/createPost.js")';
+    const blogs = @(Html.Raw(Model.JsonBlogs));
 </script>
-<script src="~/js/createPost.js" asp-append-version="true"></script>
+<script src="~/js/createPost.js" type="application/javascript" asp-append-version="true"></script>

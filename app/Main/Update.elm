@@ -3,7 +3,7 @@ module Main.Update exposing (..)
 import Json.Decode as JD
 import Json.Encode as JE
 import Jwt
-import Utils.PostUtils exposing (Blog, getPosts, postsDecoder, encodeBlogId, encodeUser, tokenStringDecoder)
+import Utils.PostUtils exposing (RawBlog, Blog, getPosts, postsDecoder, encodeBlogId, encodeUser, tokenStringDecoder, rawBlogToBlog)
 import Utils.Ports exposing (postBlogSuccess, removeBlog)
 import Main.Model exposing (Model)
 import Main.Routing exposing (Route, pathParser)
@@ -13,17 +13,32 @@ import CreatePost.Update
 import CreatePost.Messages
 
 
-initModel : Route -> Model
-initModel route =
-    { blogs = []
-    , createPage = CreatePost.Update.init |> Tuple.first
-    , route = route
-    , routeHistory = [ route ]
-    , loggedIn = False
-    , username = ""
-    , password = ""
-    , token = Nothing
+type alias Flags =
+    { blogs : Maybe (List RawBlog)
+    , token : Maybe String
+    , loggedIn : Maybe Bool
     }
+
+
+initModel : Flags -> Route -> Model
+initModel flags route =
+    let
+        inputBlogs =
+            Maybe.withDefault [] flags.blogs
+                |> List.map rawBlogToBlog
+
+        isLoggedIn =
+            Maybe.withDefault False flags.loggedIn
+    in
+        { blogs = inputBlogs
+        , createPage = CreatePost.Update.init |> Tuple.first
+        , route = route
+        , routeHistory = [ route ]
+        , loggedIn = isLoggedIn
+        , username = ""
+        , password = ""
+        , token = flags.token
+        }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

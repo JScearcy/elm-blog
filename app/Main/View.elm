@@ -42,7 +42,7 @@ view model =
             [ class "container body-content" ]
             [ page model
             , hr [] []
-            , footer [ property "innerHTML" (Json.Encode.string "&copy; 2017 - Jacob Scearcy") ] []
+            , footer [ property "innerHTML" (Json.Encode.string "&copy; 2017 - <em>Jacob Scearcy</em>") ] []
             ]
         ]
 
@@ -51,7 +51,7 @@ page : Model -> Html Msg
 page model =
     case model.route of
         SingleBlog id ->
-            section [ class "row row-centered" ]
+            section [ class "row" ]
                 [ blogPage id model
                 ]
 
